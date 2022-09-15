@@ -21,12 +21,12 @@ export default class MessageHandler implements Event {
         const savedGuild = await this.guilds.get(msg.guildId);
         const isCommand = msg.content.toLowerCase().startsWith(savedGuild.general.prefix)
 
-        //if(isCommand || msg.content.startsWith(`<@!${msg.client.user.id}>`)) {
-        //  const command = await this.commands.handle(msg, savedGuild);
-        //  if (!command) return;
-        //  
-        //  // return await this.logs.logCommand(msg, command);
-        //}
+        if(isCommand || msg.content.startsWith(`<@!${msg.client.user.id}>`)) {
+          const command = await this.commands.handle(msg, savedGuild);
+          if (!command) return;
+          
+          // return await this.logs.logCommand(msg, command);
+        }
 
     } catch (e) {}
   }

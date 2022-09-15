@@ -48,28 +48,11 @@ export default class EventsService {
         bot.on(handler.on, async (interaction) => {
           try {
             const savedGuild = await this.guilds.get(interaction.guildId);
-
             if (interaction.isButton()) return this.button.handle(interaction);
-
             if (interaction.isCommand())
               await this.commands.handle(interaction, savedGuild);
           } catch (e) {}
         });
-      }
-      if(handler.on == Events.MessageCreate) {
-        bot.on(handler.on, async(msg) => {
-            try {
-                if (!msg.member || msg.author.bot) return;
-        
-                const savedGuild = await this.guilds.get(msg.guildId);
-                const isCommand = msg.content.toLowerCase().startsWith(savedGuild.general.prefix)
-        
-                if(isCommand || msg.content.startsWith(`<@!${msg.client.user.id}>`)) {
-                  const command = await this.commands.handle(msg, savedGuild);
-                  if (!command) return;
-                }
-            } catch (e) {}
-        })
       }
       bot.on(handler.on, (...args) => handler.invoke(...args));
     }
