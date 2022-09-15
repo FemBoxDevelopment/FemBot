@@ -3,11 +3,11 @@ import { GuildDocument } from '../../data/models/guild';
 import Members from '../../data/members';
 import Deps from '../../utils/deps';
 import { MemberDocument } from '../../data/models/member';
-// import Emit from '../../services/emit';
+import Emit from '../../services/emit';
 
 export default class Leveling {
     constructor(
-        // private emit = Deps.get<Emit>(Emit),
+        private emit = Deps.get<Emit>(Emit),
         private members = Deps.get<Members>(Members)) {}
 
     async validateXPMsg(msg: any, savedGuild: GuildDocument) {
@@ -24,7 +24,7 @@ export default class Leveling {
         const newLevel = this.getLevel(savedMember.xp);
 
         if (newLevel > oldLevel) {
-            // this.emit.levelUp({ newLevel, oldLevel }, msg, savedMember);
+            this.emit.levelUp({ newLevel, oldLevel }, msg, savedMember);
             this.checkLevelRoles(msg, newLevel, savedGuild);
         }
         await savedMember.save();

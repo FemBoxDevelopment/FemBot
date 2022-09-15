@@ -17,6 +17,10 @@ declare global {
 
             PRODUCATION: 'true' | 'false';
             TEST_SERVER: string;
+
+            PAYPAL_MODE: string;
+            PAYPAL_CLIENT_ID: string;
+            PAYPAL_SECRET: string;
             
         }
     }

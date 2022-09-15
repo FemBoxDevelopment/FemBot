@@ -7,6 +7,7 @@ import { GuildDocument } from '../../data/models/guild';
 import Validators from './validators';
 import { promisify } from 'util';
 import { bot } from '../../bot';
+import Emit from '../emit';
 
 const readdir = promisify(fs.readdir);
 
@@ -15,7 +16,7 @@ export default class CommandService {
   public readonly slashCommands = []; 
 
   constructor(
-    // private emit = Deps.get<Emit>(Emit),
+    private emit = Deps.get<Emit>(Emit),
     private validators = Deps.get<Validators>(Validators),
   ) {}
 
@@ -65,7 +66,7 @@ export default class CommandService {
 
         await command.slashCommandExecute(interaction);
         
-        return // this.emit.InteractionExecuted(interaction);
+        return this.emit.InteractionExecuted(interaction);
       }
 
       const prefix = savedGuild.general.prefix
@@ -93,7 +94,7 @@ export default class CommandService {
       const ctx = new CommandContext(interaction, savedGuild, command);
       await command.execute(ctx, ...this.getCommandArgs(slicedContent, savedGuild));
 
-      // this.emit.commandExecuted(ctx);
+      this.emit.commandExecuted(ctx);
       return command;
 
     } catch (error) {

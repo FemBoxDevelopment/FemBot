@@ -1,13 +1,13 @@
 import { ButtonInteraction, EmbedBuilder, GuildMember } from 'discord.js';
 import Deps from '../../utils/deps';
-// import Emit from '../emit';
+import Emit from '../emit';
 import CommandService from './command.service';
 
 
 export default class ButtonService {
 
   constructor(
-    // private emit = Deps.get<Emit>(Emit),
+    private emit = Deps.get<Emit>(Emit),
     private command = Deps.get<CommandService>(CommandService), 
   ) {}
   
@@ -24,7 +24,7 @@ export default class ButtonService {
       if(!command) throw new Error(`Command ${commandName} not found, buttonId: ${buttonId}`);
 
       const user = this.getUserfromUserId(interaction, interaction.user.id);
-      // this.emit.buttonInteraction(interaction);
+      this.emit.buttonInteraction(interaction);
 
       if(userId)
         this.validateInteraction(interaction, this.getUserfromUserId(interaction, userId));
@@ -33,11 +33,15 @@ export default class ButtonService {
 
     } catch (error) {
       const content = (error as Error)?.message ?? 'unknown error occurred.';
+      const footer = content.split('/&*footer/')[1];
+      const text = content.split('/&*footer/')[0].length > 5 ? content.split('/&*footer/')[0] : content.split('/&*footer/')[1]
 
-      let embed = new EmbedBuilder()
+      const embed = new EmbedBuilder()
       .setColor('Red')
-      .setDescription(`> ⚠️ - ${content}`)
-      await interaction.reply({ embeds: [ embed ]});
+      .setDescription(`> ⚠️ - ${text}`)
+      .setAuthor({ name: 'An Error Occurred', iconURL: 'https://images-ext-2.discordapp.net/external/62J2SiHTggRlGa6fXltfhqS5Aa6Bpqhdn_QvvIVQsI4/%3Fv%3D1/https/cdn.discordapp.com/emojis/695631398718930997.png'})
+      .setFooter({ text: footer })      
+      await interaction.reply({ embeds: [embed] })
     }
   }
 

@@ -9,7 +9,7 @@ import { ContentValidator } from './validators/content-validator';
 import { promisify } from 'util';
 import fs from 'fs';
 import { MemberDocument } from '../../data/models/member';
-// import Emit from '../../services/emit';
+import Emit from '../../services/emit';
 
 const readdir = promisify(fs.readdir);
 
@@ -17,7 +17,7 @@ export default class AutoMod {
   private validators = new Map<MessageFilter, ContentValidator>();
 
   constructor(
-    // private emit = Deps.get<Emit>(Emit),
+    private emit = Deps.get<Emit>(Emit),
     private members = Deps.get<Members>(Members)) {}
 
   public async init() { 
@@ -88,7 +88,7 @@ export default class AutoMod {
 
     const savedMember = await this.members.get(target);
     
-    // this.emit.warning(args, target, savedMember);
+    this.emit.warning(args, target, savedMember);
     await this.saveWarning(args, savedMember);
   }
   private async saveWarning(args: PunishmentArgs, savedMember: MemberDocument) {

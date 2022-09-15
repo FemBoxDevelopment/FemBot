@@ -1,6 +1,7 @@
 
 import { Message, EmbedBuilder, TextChannel, TextBasedChannel, Events, messageLink } from 'discord.js';
 import Guilds from '../../data/guilds';
+import Logs from '../../data/logs';
 import Event from '../../interfaces/event';
 import AutoMod from '../../modules/auto-mod/auto-mod';
 import Leveling from '../../modules/xp/leveling';
@@ -14,6 +15,7 @@ export default class MessageHandler implements Event {
     private guilds = Deps.get<Guilds>(Guilds),
     private commands = Deps.get<CommandService>(CommandService),
     private leveling = Deps.get<Leveling>(Leveling),
+    private logs = Deps.get<Logs>(Logs),
     private autoMod = Deps.get<AutoMod>(AutoMod),
   ) {}
 
@@ -29,7 +31,7 @@ export default class MessageHandler implements Event {
         const command = await this.commands.handle(msg, savedGuild);
         if (!command) return;
         
-        // return await this.logs.logCommand(msg, command);
+        return await this.logs.logCommand(msg, command);
       }
 
       if (savedGuild.autoMod.enabled) {
