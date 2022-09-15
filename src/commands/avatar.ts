@@ -16,7 +16,7 @@ export default class AvatarCommand implements Command {
   slashCommandExecute = async(interaction: CommandInteraction) => {
     const user = interaction.options.getUser('user');
 
-    await interaction.reply({ embeds: [this.embed(interaction.user, user)] });
+    await interaction.reply({ embeds: [this.embed(interaction.user, user)], allowedMentions: { repliedUser: false } });
   }
 
   embed(sender: User, mention: User) {
@@ -30,9 +30,9 @@ export default class AvatarCommand implements Command {
   }
   
   execute = (message: CommandContext) =>{
-    let mention = message.message.mentions.users.first() || message.author;
+    const mention = message.message.mentions.users.first() || message.author;
 
-    message.message.reply({ embeds: [this.embed(message.author, mention)] });
+    message.message.reply({ embeds: [this.embed(message.author, mention)], allowedMentions: { repliedUser: false } });
   }
 }
  

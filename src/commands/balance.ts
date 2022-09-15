@@ -1,74 +1,93 @@
-import { Command, CommandContext, Permission } from '../interfaces/command';
-import Discord, { CommandInteraction, EmbedBuilder, User } from 'discord.js'
-import { SlashCommandBuilder } from '@discordjs/builders';
-import Members from '../data/members';
-import Deps from '../utils/deps';
-import Guilds from '../data/guilds';
+import { Command, CommandContext, Permission } from "../interfaces/command";
+import Discord, {
+  CommandInteraction,
+  EmbedBuilder,
+  GuildMember,
+  Message,
+  User,
+} from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import Members from "../data/members";
+import Deps from "../utils/deps";
+import Guilds from "../data/guilds";
 
 export default class BalanceCommand implements Command {
-    name = 'balance';
-    summary = 'View your balance!';
-    precondition: Permission = '';
-    aliases = [ 'bal' ];
-    module = 'economy';
-    isSlashCommand = true;
+  name = "balance";
+  summary = "View your balance!";
+  precondition: Permission = "";
+  aliases = ["bal"];
+  module = "economy";
+  isSlashCommand = true;
 
-    constructor(
-        private members = Deps.get<Members>(Members),
-        private guilds = Deps.get<Guilds>(Guilds),
-    ) {}
+  constructor(
+    private members = Deps.get<Members>(Members),
+    private guilds = Deps.get<Guilds>(Guilds)
+  ) {}
 
-    slashCommandData = new SlashCommandBuilder()
-        .setName(this.name)
-        .setDescription(this.summary)
-        .addUserOption(opt => opt.setName('user').setRequired(false).setDescription('The user to check the balance of'))
+  slashCommandData = new SlashCommandBuilder()
+    .setName(this.name)
+    .setDescription(this.summary)
+    .addUserOption((opt) =>
+      opt
+        .setName("user")
+        .setRequired(false)
+        .setDescription("The user to check the balance of")
+    );
 
-    slashCommandExecute = async(interaction: CommandInteraction) => {
-        const guild = await this.guilds.get(interaction.guildId);
-        const currencyName = guild.shop.currency.name.charAt(0).toUpperCase() + guild.shop.currency.name.slice(1); 
+  slashCommandExecute = async (interaction: CommandInteraction) => {
+    let user = interaction.options.getUser("user");
 
-        let user = interaction.options.getUser('user');
+    if (!user || user.bot) user = interaction.user;
 
-        if(!user || user.bot)
-            user = interaction.user
+    const member = interaction.guild.members.cache.get(user.id);
 
-        const member = interaction.guild.members.cache.get(user.id);
-        
-        let balance = await this.members.getBalance(member);
+    this.sendEmbed(interaction, member);
+  };
 
-        let embed = new EmbedBuilder()
-        .setColor('#dd2e45')
-        .setAuthor({ name: `${user.tag}`, iconURL: user.displayAvatarURL()})
-        .setDescription(`\`${balance}\` ${guild.shop.currency.icon} | **${currencyName}**`)
+  execute = async (message: CommandContext, ...args: string[]) => {
+    let user = message.member;
 
-        interaction.reply({ embeds: [embed] })
+    if (message.message.mentions.users.first())
+      user = message.guild.members.cache.get(
+        message.message.mentions.users.first().id
+      );
 
+    if (user.user.bot) user = message.member;
 
-    }
-    
-    execute = async (message: CommandContext, ...args: string[]) =>{
-        const guild = await this.guilds.get(message.guildId);
-        const currencyName = guild.shop.currency.name.charAt(0).toUpperCase() + guild.shop.currency.name.slice(1); 
+    this.sendEmbed(message.message, user);
+  };
 
-        let embed = new EmbedBuilder()
-        .setColor('#dd2e45')
-        .setAuthor({ name: `${message.author.tag}`, iconURL: message.author.displayAvatarURL() })
+  /**
+   * sends balance embed as a reply to the user interaction
+   *
+   * @param interaction Message or CommandInteraction to reply to user message
+   * @param user GuildMember to check balance
+   * @returns replies to the user interaction
+   */
+  private async sendEmbed(
+    interaction: Message | CommandInteraction,
+    user: GuildMember
+  ) {
+    const guild = await this.guilds.get(interaction.guildId);
+    const currencyName =
+      guild.shop.currency.name.charAt(0).toUpperCase() +
+      guild.shop.currency.name.slice(1);
 
-        let balance = 
-            await this.members.getBalance(message.member);
+    const balance = await this.members.getBalance(user);
 
-        if(message.message.mentions.users.first()) {
-            const mention = message.guild.members.cache.get(message.message.mentions.users.first().id);
+    const embed = new EmbedBuilder()
+      .setColor("#dd2e45")
+      .setAuthor({
+        name: `${user.user.tag}`,
+        iconURL: user.user.displayAvatarURL(),
+      })
+      .setDescription(
+        `\`${balance}\` ${guild.shop.currency.icon} | **${currencyName}**`
+      );
 
-            if(mention.user.bot)
-                throw new TypeError('Bots do not have accounts.')
-
-            balance = await this.members.getBalance(mention);
-            embed.setDescription(`\`${balance}\` ${guild.shop.currency.icon} | **${currencyName}**`)
-            .setAuthor({ name: `${mention.user.tag}`, iconURL: mention.user.displayAvatarURL() })
-        } else embed.setDescription(`\`${balance}\` ${guild.shop.currency.icon} | **${currencyName}**`);
-
-        return message.message.reply({ embeds: [embed] });
-
-    }
+    interaction.reply({
+      embeds: [embed],
+      allowedMentions: { repliedUser: false },
+    });
+  }
 }
