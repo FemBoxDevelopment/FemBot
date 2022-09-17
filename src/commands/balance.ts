@@ -1,5 +1,6 @@
 import { Command, CommandContext, Permission } from "../interfaces/command";
 import Discord, {
+  AutocompleteInteraction,
   CommandInteraction,
   EmbedBuilder,
   GuildMember,
@@ -35,7 +36,8 @@ export default class BalanceCommand implements Command {
         .setDescription("The user to check the balance of")
     );
 
-  slashCommandExecute = async (interaction: CommandInteraction) => {
+  slashCommandExecute = async (interaction: AutocompleteInteraction | CommandInteraction) => {
+    if(interaction.isAutocomplete()) return; 
     let user = interaction.options.getUser("user");
 
     if (!user || user.bot) user = interaction.user;

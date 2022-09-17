@@ -51,6 +51,9 @@ export default class EventsService {
             if (interaction.isButton()) return this.button.handle(interaction);
             if (interaction.isCommand())
               await this.commands.handle(interaction, savedGuild);
+
+            if(interaction.isAutocomplete())
+              await this.commands.handle(interaction, savedGuild)
           } catch (e) {}
         });
       }

@@ -1,5 +1,5 @@
 import { Command, CommandContext } from '../interfaces/command';
-import { EmbedBuilder, CommandInteraction, User } from 'discord.js'
+import { EmbedBuilder, CommandInteraction, User, AutocompleteInteraction } from 'discord.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
  
 export default class AvatarCommand implements Command {
@@ -13,7 +13,9 @@ export default class AvatarCommand implements Command {
     .setDescription(`${this.summary}`)
     .addUserOption(option => option.setName('user').setRequired(true).setDescription('The user to get the avatar of'));
   
-  slashCommandExecute = async(interaction: CommandInteraction) => {
+  slashCommandExecute = async(interaction: AutocompleteInteraction | CommandInteraction) => {
+    if(interaction.isAutocomplete()) return
+
     const user = interaction.options.getUser('user');
 
     await interaction.reply({ embeds: [this.embed(interaction.user, user)], allowedMentions: { repliedUser: false } });

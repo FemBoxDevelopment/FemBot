@@ -1,5 +1,6 @@
 import { Command, CommandContext, Permission } from "../interfaces/command";
 import {
+  AutocompleteInteraction,
   Client,
   CommandInteraction,
   EmbedBuilder,
@@ -19,8 +20,10 @@ export default class PingCommand implements Command {
     .setName(this.name)
     .setDescription(this.summary);
 
-  slashCommandExecute = async (interaction: CommandInteraction) =>
-    this.pingEmbed(interaction, interaction.client.ws.ping, interaction.client);
+  slashCommandExecute = async (interaction: AutocompleteInteraction | CommandInteraction) => {
+      if(interaction.isAutocomplete()) return; 
+      this.pingEmbed(interaction, interaction.client.ws.ping, interaction.client);
+  }
 
   private pingEmbed = (
     interaction: CommandInteraction | Message,

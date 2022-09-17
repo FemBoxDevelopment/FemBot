@@ -5,7 +5,7 @@ import { GuildDocument, MessageFilter } from '../../data/models/guild';
 import Deps from '../../utils/deps';
 import Members from '../../data/members';
 import Log from '../../utils/log';
-import { ContentValidator } from './validators/content-validator';
+import { ContentValidator } from '../../interfaces/content-validator';
 import { promisify } from 'util';
 import fs from 'fs';
 import { MemberDocument } from '../../data/models/member';

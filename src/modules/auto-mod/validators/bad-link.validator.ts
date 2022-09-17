@@ -1,5 +1,5 @@
 import { GuildDocument, MessageFilter } from '../../../data/models/guild';
-import { ContentValidator } from './content-validator';
+import { ContentValidator } from '../../../interfaces/content-validator';
 import AutoMod, { ValidationError } from '../auto-mod';
 import { Message } from 'discord.js';
 

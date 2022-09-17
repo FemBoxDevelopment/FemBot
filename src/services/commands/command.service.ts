@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Message, EmbedBuilder, CommandInteraction } from 'discord.js';
+import { Message, EmbedBuilder, CommandInteraction, AutocompleteInteraction } from 'discord.js';
 import { Command, CommandContext } from '../../interfaces/command';
 import Log from '../../utils/log';
 import Deps from '../../utils/deps';
@@ -56,7 +56,7 @@ export default class CommandService {
     Log.info(`Loaded: ${this.commands.size} commands`, `cmds`);
   }
 
-  public async handle(interaction: Message | CommandInteraction, savedGuild: GuildDocument) {
+  public async handle(interaction: Message | CommandInteraction | AutocompleteInteraction, savedGuild: GuildDocument) {
     try {
       if(interaction instanceof CommandInteraction) {
         if(!interaction.isCommand()) return;
@@ -67,6 +67,15 @@ export default class CommandService {
         await command.slashCommandExecute(interaction);
         
         return this.emit.InteractionExecuted(interaction);
+      }
+
+      if(interaction instanceof AutocompleteInteraction) {
+        if(!interaction.isAutocomplete()) return;
+
+        const command = this.commands.get(interaction.commandName);
+        if(!command) return;
+
+        return await command.slashCommandExecute(interaction);
       }
 
       const prefix = savedGuild.general.prefix
@@ -107,7 +116,9 @@ export default class CommandService {
       .setDescription(`> ⚠️ - ${text}`)
       .setAuthor({ name: 'An Error Occurred', iconURL: 'https://images-ext-2.discordapp.net/external/62J2SiHTggRlGa6fXltfhqS5Aa6Bpqhdn_QvvIVQsI4/%3Fv%3D1/https/cdn.discordapp.com/emojis/695631398718930997.png'})
       .setFooter({ text: footer })      
-      await interaction.reply({ embeds: [embed] })
+      if(interaction instanceof AutocompleteInteraction)
+        return
+      else await interaction.reply({ embeds: [embed] })
     }
   }
 
