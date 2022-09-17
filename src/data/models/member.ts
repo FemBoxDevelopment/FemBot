@@ -4,12 +4,6 @@ export class Module {
     enabled = true;
 };
 
-export class PrivateChannel extends Module {
-    channel: string;
-    expires: Date;
-    hasChannel = false;
-}
-
 export class Daily extends Module {
     DailyTimeout: number;
     dailyStreak: number;
@@ -37,7 +31,6 @@ const memberSchema = new Schema({
     guildId: String,
     recentMessages: { type: Array, default: [] },
     warnings: { type: Array, default: [] },
-    privateChannel: { type: Object, default: new PrivateChannel() },
     economy: { type: Object, default: new Economy() },
     xp: { type: Number, default: 0 },
 });
@@ -47,7 +40,6 @@ export interface MemberDocument extends Document {
     guildId: string;
     recentMessages: Date[];
     warnings: Warning[];
-    privateChannel: PrivateChannel;
     economy: Economy;
     xp: number;
 }

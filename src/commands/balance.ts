@@ -10,6 +10,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import Members from "../data/members";
 import Deps from "../utils/deps";
 import Guilds from "../data/guilds";
+import { getMemberFromMention } from "../utils/command-utils";
 
 export default class BalanceCommand implements Command {
   name = "balance";
@@ -39,7 +40,8 @@ export default class BalanceCommand implements Command {
 
     if (!user || user.bot) user = interaction.user;
 
-    const member = interaction.guild.members.cache.get(user.id);
+    const member = 
+      getMemberFromMention(user.id, interaction.guild);
 
     this.sendEmbed(interaction, member);
   };
@@ -48,9 +50,7 @@ export default class BalanceCommand implements Command {
     let user = message.member;
 
     if (message.message.mentions.users.first())
-      user = message.guild.members.cache.get(
-        message.message.mentions.users.first().id
-      );
+      user = getMemberFromMention(message.mentions.users.first().id, message.guild)
 
     if (user.user.bot) user = message.member;
 

@@ -23,7 +23,6 @@ export default class ButtonService {
       const command = this.command.commands.get(commandName);
       if(!command) throw new Error(`Command ${commandName} not found, buttonId: ${buttonId}`);
 
-      const user = this.getUserfromUserId(interaction, interaction.user.id);
       this.emit.buttonInteraction(interaction);
 
       if(userId)
@@ -31,18 +30,7 @@ export default class ButtonService {
 
       return await command.buttonExecute(interaction, buttonId);
 
-    } catch (error) {
-      const content = (error as Error)?.message ?? 'unknown error occurred.';
-      const footer = content.split('/&*footer/')[1];
-      const text = content.split('/&*footer/')[0].length > 5 ? content.split('/&*footer/')[0] : content.split('/&*footer/')[1]
-
-      const embed = new EmbedBuilder()
-      .setColor('Red')
-      .setDescription(`> ⚠️ - ${text}`)
-      .setAuthor({ name: 'An Error Occurred', iconURL: 'https://images-ext-2.discordapp.net/external/62J2SiHTggRlGa6fXltfhqS5Aa6Bpqhdn_QvvIVQsI4/%3Fv%3D1/https/cdn.discordapp.com/emojis/695631398718930997.png'})
-      .setFooter({ text: footer })      
-      await interaction.reply({ embeds: [embed] })
-    }
+    } catch (error) {}
   }
 
   private getUserfromUserId(interaction: ButtonInteraction, userId: string) {

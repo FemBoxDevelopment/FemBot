@@ -228,8 +228,6 @@ router.post('/:id/channels/:channelId/embed', async(req, res) => {
     const { id, channelId } = req.params;
     const embedSent = await webhookLogger.embedSent(req.body.embedData, channelId);
 
-    console.log(req.body.embedData);
-
     res.json({ message: embedSent });
   } catch (error) {
     sendError(res, new APIError(400)); }

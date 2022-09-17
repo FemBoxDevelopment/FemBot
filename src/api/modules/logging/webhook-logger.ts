@@ -1,4 +1,4 @@
-import { EmbedBuilder, TextChannel, ColorResolvable } from 'discord.js';
+import { EmbedBuilder, ColorResolvable, EmbedData, TextChannel } from 'discord.js';
 import { bot } from '../../../bot';
 
 export class WebhookLogger {
@@ -32,16 +32,17 @@ export class WebhookLogger {
     const embed = new EmbedBuilder()
     .setTitle(embedData.title)
     .setDescription(embedData.description)
-    .setColor((embedData.color as ColorResolvable) ?? '#0099ff')
-    .setAuthor({ name: embedData.author.name, url: embedData.author.url, iconURL: embedData.author.icon })
-    .setImage(embedData.image)
-    .setFooter({ text: embedData.footer.text, iconURL: embedData.footer.icon })
+    .setColor(embedData.color ?? '#0099ff')
+    .setAuthor({ name: embedData.author.name, url: embedData.author.url, iconURL: embedData.author.iconURL })
+    .setImage(embedData.image.url)
+    .setFooter({ text: embedData.footer.text, iconURL: embedData.footer.iconURL })
     .setURL(embedData.url)
-    .setThumbnail(embedData.thumbnail)
+    .setThumbnail(embedData.thumbnail.url)
     
     //get channel in guild
     const channel = bot.channels.cache.get(channelId) as any;
-    if (!channel) return;
+    if (!channel) 
+      throw new TypeError('No channel found.');
 
     try {
 
@@ -69,21 +70,6 @@ export class WebhookLogger {
   }
 }
 
-type embedData = {
+interface embedData extends EmbedData {
   message: string,
-  title: string,
-  description: string,
-  footer: {
-    text: string,
-    icon: string,
-  },
-  author: {
-    name: string,
-    url: string,
-    icon: string,
-  },
-  image: string,
-  color: string,
-  url: string,
-  thumbnail: string,
 }
