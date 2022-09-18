@@ -1,5 +1,5 @@
-import { Command, CommandContext } from '../../interfaces/command';
-import HangmanGame from "../../modules/games/hangman";
+import { Command, CommandContext } from '../interfaces/command';
+import HangmanGame from "../modules/games/hangman";
 
 
 export default class HangmanCommand implements Command {

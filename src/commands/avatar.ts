@@ -1,4 +1,4 @@
-import { Command, CommandContext } from '../../interfaces/command';
+import { Command, CommandContext } from '../interfaces/command';
 import { EmbedBuilder, CommandInteraction, User, AutocompleteInteraction } from 'discord.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
  

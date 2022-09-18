@@ -53,8 +53,7 @@ export default class AutoMod {
       }
   }
 
-  /**
-   * 
+  /** Validates the user action
    * @param { GuildMember } target the target user
    * @param { User } instigator the insigator
    * @returns { void }
@@ -70,7 +69,7 @@ export default class AutoMod {
     const instigatorMember = target.guild.members.cache
       .get(instigator.id);    
     if (instigatorMember.roles.highest.position <= target.roles.highest.position)
-      throw new TypeError('User has the same or higher role.');
+      throw new TypeError('User does not have permission to ban this member. /&*footer/Invalid permission.');
   }
 
   public getMember(target: GuildMember | User | string, guild: Guild): GuildMember {
@@ -134,19 +133,42 @@ export default class AutoMod {
     interaction.reply({ embeds: [embed], components: [ticketEmbedButtons] })
   }
 
-  public ban(interaction: CommandInteraction | CommandContext, target: GuildMember, reason: string) {
-    this.validateAction(target, interaction.user);
+  public ban(interaction: CommandInteraction | CommandContext, target: GuildMember, reason: string, moderator: string) {
+    this.validateAction(target, interaction.user)
 
-    if(!reason) 
-      throw new Error('/&*footer/ No reason provided!');
+    if (!reason) throw new Error('/&*footer/ No reason was provided.')
 
-    try{
-      target.ban({ reason });
-    } catch (e) {
-      if(interaction instanceof CommandInteraction)
-        interaction.reply({ content: `Unable to ban user: \`${(e as Error).message}\``, ephemeral: true });
+    const bannedEmbed = new EmbedBuilder()
+    .setColor('Red')
+    .setAuthor({name: `You have been banned from ${(interaction.guild as any).name}.`})
+    .setFields([
+      {
+        name: 'Reason:',
+        value: reason,
+        inline: true
+      },
+      {
+        name: 'Moderator:',
+        value: moderator,
+        inline: true
+      }
+    ])
+    .setTimestamp()
+
+    //! THIS NEEDS TO BE FIXED ASAP
+    try {
+      (target as any).send({embeds: [bannedEmbed]}).catch((r) => {
+        if(interaction instanceof CommandInteraction) 
+          interaction.reply(`${r}`)
+        else 
+          interaction.message.reply(`${r}`)
+      })
+      target.ban({ reason })
+    } catch(err) {
+      if(interaction instanceof CommandInteraction) 
+        interaction.reply(`Unable to ban user: \`${(err as Error).message.substring(0, 1000)}\`. Please report this to the developers.`)
       else 
-        interaction.message.reply({ content: `Unable to ban user: \`${(e as Error).message}\`` });
+        interaction.message.reply(`Unable to ban user: \`${(err as Error).message.substring(0, 1000)}\`. Please report this to the developers.`)
     }
 
     const embed = new EmbedBuilder()
@@ -157,12 +179,11 @@ export default class AutoMod {
     ])
     .setTimestamp()
 
+
     if(interaction instanceof CommandInteraction) 
       interaction.reply({ embeds: [embed] })
     else 
       interaction.message.reply({ embeds: [embed] })
-
-    embed.setDescription(`You have been banned in ${(interaction.guild as any).name}!`)
   }
 }
 

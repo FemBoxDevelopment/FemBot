@@ -28,7 +28,7 @@ export default class CommandService {
     for (const fileName of files) {
       const cleanName = fileName.replace(/(\..*)/, '');
       
-      const { default: Command } = await import(`../../commands/*/${cleanName}`);
+      const { default: Command } = await import(`../../commands/${cleanName}`);
       if (!Command) continue;
       
       const command: Command = new Command();
@@ -60,8 +60,6 @@ export default class CommandService {
 
   public async handle(interaction: Message | CommandInteraction | AutocompleteInteraction, savedGuild: GuildDocument) {
     try {
-      console.log(this.commands.size)
-
       if(!(interaction instanceof Message)) {
 
         const command = this.findCommand(interaction.commandName, savedGuild);

@@ -31,11 +31,6 @@ export default class PlaySongEvent implements MusicEvent {
                     inline: true
                 },
                 {
-                    name: 'Dislikes',
-                    value: `\`${song.dislikes}\` 👎`,
-                    inline: true
-                },
-                {
                     name: 'Requested By',
                     value: `<@${song.user.id}>`,
                     inline: true,

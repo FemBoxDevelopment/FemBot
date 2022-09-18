@@ -15,8 +15,8 @@ export interface Command {
 
   slashCommandData?: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup"> | SlashCommandSubcommandBuilder | SlashCommandSubcommandsOnlyBuilder;
   
-  slashCommandExecute?: (interaction: CommandInteraction | AutocompleteInteraction) => Promise<void>;
-  buttonExecute?: (interaction: ButtonInteraction, buttonId: string) => Promise<void>;
+  slashCommandExecute?: (interaction: CommandInteraction | AutocompleteInteraction) => Promise<any> | void;
+  buttonExecute?: (interaction: ButtonInteraction, buttonId: string) => Promise<any> | void;
 
   execute: (ctx: CommandContext, ...args: any) => Promise<any> | void;
 }

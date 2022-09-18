@@ -14,8 +14,6 @@ export class SessionManager {
     const timeToClear = 5 *  1000;
     setTimeout(() => this.sessions.delete(key), timeToClear);
     await this.update(key);
-
-    console.log("Creating a key")
   
     return this.sessions.get(key);
   }

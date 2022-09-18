@@ -8,12 +8,13 @@ import Guilds from "../data/guilds";
 import CommandService from "./commands/command.service";
 import Deps from "../utils/Deps";
 import { Events } from "discord.js";
+import CustomEvent from "../interfaces/custom-event";
 
 const readdir = promisify(fs.readdir);
 
 export default class EventsService {
   private readonly handlers: Event[] = [];
-  private readonly customHandlers: Event[] = [];
+  private readonly customHandlers: CustomEvent[] = [];
 
   constructor(
     private commands = Deps.get<CommandService>(CommandService),
@@ -63,7 +64,7 @@ export default class EventsService {
     }
 
     for (const handler of this.customHandlers)
-      emitter.on(handler.on, (...args) => handler.invoke(...args));
+      emitter.on(handler.on, (...args) => handler.init(...args));
 
     Log.info(`Loaded: ${this.handlers.length} handlers`, "events");
     Log.info(`Loaded: ${this.customHandlers.length} custom handlers`, "events");

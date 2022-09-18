@@ -1,3 +1,4 @@
+import { createCanvas } from 'canvas';
 import fs from 'fs';
 import { promisify } from 'util';
 import { Guild, GuildTextBasedChannel, VoiceBasedChannel } from "discord.js";
@@ -14,7 +15,7 @@ export default class Music {
     constructor() {
         this._client = new DisTube(bot, {
             leaveOnEmpty: true,
-            leaveOnFinish: false,
+            leaveOnFinish: true,
             leaveOnStop: false,
 
             ytdlOptions: {
@@ -47,12 +48,12 @@ export default class Music {
         return await this.client.voices.get(voiceChannel.guildId).join(voiceChannel)
     }
 
-    getQueue(guild?: Guild) {
+    getQueue(guild?: GuildIdResolvable) {        
         return this.client.getQueue(guild);
     }
 
-    getDuration(player: Queue) {
-        return `${player.formattedCurrentTime} / ${player.songs[0].formattedDuration}`;
+    getDuration(player: Queue, i?: number) {
+        return `${player.formattedCurrentTime} / ${player.songs[i ?? 0].formattedDuration}`;
     };
 
     getConnectionStatus(guild: GuildIdResolvable) {

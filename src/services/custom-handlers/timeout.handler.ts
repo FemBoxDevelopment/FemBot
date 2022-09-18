@@ -1,11 +1,11 @@
-import { Collection, Guild, GuildManager, GuildMember } from "discord.js";
-import Members from "../../data/members";
+import { Guild, GuildMember } from "discord.js";
 import Users from "../../data/users";
 import Deps from "../../utils/deps";
-import RemindCommand from "../../commands/fun/remind";
+import RemindCommand from "../../commands/remind";
+import CustomEvent from "../../interfaces/custom-event";
 
 
-export default class TimeoutHandler {
+export default class TimeoutHandler implements CustomEvent {
   on = 'timeout';
   public readonly members: GuildMember[] = []; 
 
@@ -16,26 +16,23 @@ export default class TimeoutHandler {
 
 
   async init(guilds: Guild[]) {
+    for(const guild of guilds) {
+      const members = guild.members.cache.filter(member => !member.user.bot).map(member => member);
 
+      this.members.push(...members);
+    }
+    
+    for(const member of this.members) {
+      if(!member) return;
 
-      for(const guild of guilds){
-        const members = guild.members.cache.filter(member => !member.user.bot).map(member => member);
+      const SavedUser = await this.users.get(member);
 
-        this.members.push(...members);
+      for( const reminder of SavedUser.reminders ) {
+        const timeLeft = reminder.expires.getTime() - Date.now();
+        setTimeout(async() => {
+            await this.remind.invokeReminder({ SavedUser, ...reminder });
+        }, timeLeft);
       }
-
-      for(const member of this.members) {
-            // get the member
-            if(!member) return
-
-            const SavedUser = await this.users.get(member);
-
-            for( const reminder of SavedUser.reminders ) {
-                const timeLeft = reminder.expires.getTime() - Date.now();
-                setTimeout(async() => {
-                    await this.remind.invokeReminder({ SavedUser, ...reminder });
-                }, timeLeft);
-            }
-      }
+    }
   }
 }

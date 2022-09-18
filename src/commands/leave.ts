@@ -1,10 +1,11 @@
 import { CacheType, CommandInteraction, GuildTextBasedChannel, SlashCommandBuilder, AutocompleteInteraction } from 'discord.js';
-import { Command, CommandContext, Permission } from '../../interfaces/command';
-import Deps from '../../utils/deps';
-import Music from '../../modules/music/music';
-import { getMemberFromMention } from '../../utils/command-utils';
+import { Command, CommandContext, Permission } from '../interfaces/command';
+import Deps from '../utils/deps';
+import Music from '../modules/music/music';
+import { getMemberFromMention } from '../utils/command-utils';
 
 export default class PlayCommand implements Command {
+  aliases = ["stop", "exit"];
   module = 'Music';
   name = 'leave';
   precondition: Permission = 'Speak';

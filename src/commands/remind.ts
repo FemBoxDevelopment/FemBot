@@ -1,26 +1,42 @@
-import { Command, CommandContext, Permission } from '../../interfaces/command';
-import { EmbedBuilder } from 'discord.js'
-import Guilds from '../../data/guilds';
-import Users from '../../data/users';
-import { bot } from '../../bot';
-import Deps from '../../utils/deps';
+import { Command, CommandContext, Permission } from '../interfaces/command';
+import { AutocompleteInteraction, CacheType, CommandInteraction, EmbedBuilder, Message, SlashCommandBuilder } from 'discord.js'
+import Guilds from '../data/guilds';
+import Users from '../data/users';
+import { bot } from '../bot';
+import Deps from '../utils/deps';
 import ms from 'ms'
-import { generateUUID } from '../../utils/command-utils';
-import { UserDocument } from '../../data/models/user';
+import { generateUUID } from '../utils/command-utils';
+import { UserDocument } from '../data/models/user';
 
 export default class RemindCommand implements Command {
     name = 'remind';
     usage = "remind me [message] in [time]";
     summary = 'remind yourself to do something.';
     module = 'general';
+    isSlashCommand = true;
+
+    slashCommandData = new SlashCommandBuilder()
+        .setName(this.name)
+        .setDescription(this.summary)
+        .addStringOption(opt => opt.setName('message').setDescription('Message to remind you.').setRequired(true))
+        .addStringOption(opt =>  opt.setName('time').setDescription('when to remind you. {m/h/d}').setRequired(true))
 
     constructor(private guilds = Deps.get<Guilds>(Guilds),
                 private users = Deps.get<Users>(Users)) {}
+
+    slashCommandExecute = async(interaction: CommandInteraction | AutocompleteInteraction) => {
+        if(interaction.isAutocomplete())
+            return;
+
+        const SavedUser = await this.users.get(interaction.user);
+
+        const timeRemind = interaction.options.get('time', true).value.toString();
+        const content = interaction.options.get('message', true).value.toString();
+
+        this.main(interaction, SavedUser, content, timeRemind);
+    };
     
     execute = async(message: CommandContext, ...args: string[]) =>{
-        const checkMark = '<a:pink_check:931318089281314896>'
-
-        const embed = new EmbedBuilder();
         const SavedGuild = await this.guilds.get(message.guildId);
         const SavedUser = await this.users.get(message.author);
         const { prefix } = SavedGuild.general;
@@ -39,13 +55,16 @@ export default class RemindCommand implements Command {
         //get words after 'in' in args
         const timeRemind = args.slice(args.indexOf(time) + 1).join(' ');
         // this returns [time] eg: 5 minutes
-
         //remove time from remind
         const content = args.slice(1).join(' ').replace(`in ${timeRemind}`, '').trim();
 
+        this.main(message.message, SavedUser, content, timeRemind)
+    }
 
+    private async main(interaction: Message | CommandInteraction, SavedUser: UserDocument, content: string, timeRemind: string) {
+        const suffix = /[a-zA-z]/.test(timeRemind)
 
-        const remindIn = ms(timeRemind);
+        const remindIn = ms(timeRemind) * (suffix ? 1 : 1000);
         const longTime = ms(remindIn, { long: true });
 
         //get the time it'll be when the user will be reminded
@@ -62,15 +81,14 @@ export default class RemindCommand implements Command {
 
         await SavedUser.updateOne(SavedUser);
 
-        embed.setDescription(`${checkMark} \u200B | \u200B Okay, I'll remind you about \`${content}\` in ${longTime}`);
+        const embed = new EmbedBuilder()
+        .setDescription(`✅ \u200B | \u200B Okay, I'll remind you about \`${content}\` in ${longTime}`);
 
-        message.message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } }).then(() => {
-            setTimeout(async() => {
-                this.invokeReminder({ SavedUser, id, content });
-            }, remindIn);
-        });
-
-
+        interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+        
+        setTimeout(async() => {
+            this.invokeReminder({ SavedUser, id, content });
+        }, remindIn);
     }
 
     public async invokeReminder({SavedUser, id, content}: Reminder) {

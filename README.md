@@ -31,12 +31,6 @@ $ npm prune --production
 $ npm start
 ```
 
-## Self-hosting
-
-You can deploy this bot to [Heroku](https://heroku.com) instead of self hosting the bot.
-
-<a href="https://heroku.com/deploy?template=https://github.com/FemCordDevelopment/FemBot"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy to Heroku"></a>
-
 ## Project Contributors
 
 **Developers**

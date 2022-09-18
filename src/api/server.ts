@@ -10,7 +10,7 @@ import Stats from './modules/stats';
 import { router as apiRoutes } from './routes/api-routes';
 import { router as authRoutes } from './routes/auth-routes';
 import { router as guildsRoutes } from './routes/guilds-routes';
-// import { router as musicRoutes } from './routes/music-routes';
+import { router as musicRoutes } from './routes/music-routes';
 import { router as payRoutes } from './routes/pay-routes';
 import { router as userRoutes } from './routes/user-routes';
 
@@ -23,7 +23,7 @@ export default class API {
 
         // api routes
         app.use('/api/pay', payRoutes);
-        // app.use('/api/guilds/:id/music', musicRoutes);
+        app.use('/api/guilds/:id/music', musicRoutes);
         app.use('/api/guilds', guildsRoutes);
         app.use('/api/user', userRoutes);
         app.use('/api', apiRoutes, authRoutes);

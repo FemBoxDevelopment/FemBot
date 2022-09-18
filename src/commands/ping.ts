@@ -1,4 +1,4 @@
-import { Command, CommandContext, Permission } from "../../interfaces/command";
+import { Command, CommandContext, Permission } from "../interfaces/command";
 import {
   AutocompleteInteraction,
   Client,

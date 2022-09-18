@@ -22,8 +22,8 @@ export default class ReadyHandler implements Event {
         if(this.started) return;
         this.started = true;
 
-        bot.user.setActivity(`I'm gay!`, { type: ActivityType.Playing });
-        bot.user.setStatus('idle');
+        bot.user.setActivity(`over ${bot.guilds.cache.size} servers!`, { type: ActivityType.Watching });
+        bot.user.setStatus('dnd');
 
         await this.autoMod.init();
         await this.commandService.init();
