@@ -2,8 +2,7 @@ import { Command, CommandContext, Permission } from '../interfaces/command';
 import Deps from '../utils/deps';
 import { getMemberFromMention } from '../utils/command-utils';
 import Guilds from '../data/guilds';
-import { CommandInteraction, Message, User, AutocompleteInteraction } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
+import { CommandInteraction, Message, User, AutocompleteInteraction, SlashCommandBuilder } from 'discord.js';
 
 export default class RankCommand implements Command {
     aliases = ['level', 'profile', 'xp'];

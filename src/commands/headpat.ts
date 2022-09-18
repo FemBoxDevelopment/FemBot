@@ -1,6 +1,5 @@
 import { Command, CommandContext, Permission } from '../interfaces/command';
-import Discord, { CommandInteraction, User, AutocompleteInteraction, EmbedBuilder } from 'discord.js'
-import { SlashCommandBuilder } from '@discordjs/builders';
+import Discord, { CommandInteraction, User, AutocompleteInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import neko from 'nekos.life'
 
 export default class HeadPatCommand implements Command {

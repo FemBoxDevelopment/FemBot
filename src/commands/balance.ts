@@ -1,5 +1,6 @@
 import { Command, CommandContext, Permission } from "../interfaces/command";
 import Discord, {
+  SlashCommandBuilder,
   AutocompleteInteraction,
   CommandInteraction,
   EmbedBuilder,
@@ -7,7 +8,6 @@ import Discord, {
   Message,
   User,
 } from "discord.js";
-import { SlashCommandBuilder } from "@discordjs/builders";
 import Members from "../data/members";
 import Deps from "../utils/deps";
 import Guilds from "../data/guilds";

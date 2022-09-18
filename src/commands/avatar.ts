@@ -1,6 +1,5 @@
 import { Command, CommandContext } from '../interfaces/command';
-import { EmbedBuilder, CommandInteraction, User, AutocompleteInteraction } from 'discord.js'
-import { SlashCommandBuilder } from '@discordjs/builders'
+import { EmbedBuilder, CommandInteraction, User, AutocompleteInteraction, SlashCommandBuilder } from 'discord.js'
  
 export default class AvatarCommand implements Command {
   name = 'avatar';

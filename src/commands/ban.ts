@@ -2,8 +2,7 @@ import { Command, CommandContext, Permission } from '../interfaces/command';
 import Deps from '../utils/deps';
 import AutoMod from '../modules/auto-mod/auto-mod';
 import { getMemberFromMention } from '../utils/command-utils';
-import Discord, { AutocompleteInteraction, Client, CommandInteraction } from 'discord.js'
-import { SlashCommandBuilder } from '@discordjs/builders';
+import Discord, { AutocompleteInteraction, Client, CommandInteraction, SlashCommandBuilder } from 'discord.js'
 
 export default class BanCommand implements Command {
     name = 'ban';

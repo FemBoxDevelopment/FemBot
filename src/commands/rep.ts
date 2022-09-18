@@ -1,13 +1,13 @@
 import { Command, CommandContext, Permission } from "../interfaces/command";
 import ms from "ms";
 import { getMemberFromMention } from "../utils/command-utils";
-import { SlashCommandBuilder } from "@discordjs/builders";
 import {
   EmbedBuilder,
   CommandInteraction,
   AutocompleteInteraction,
   User,
   Message,
+  SlashCommandBuilder
 } from "discord.js";
 import neko from "nekos.life";
 import UserData from "../data/users";
