@@ -22,12 +22,13 @@ export default class CommandService {
   ) {}
 
   public async init() {
-    const files = await readdir('./src/commands');
+    const files = await readdir('./src/commands/');
+
     
     for (const fileName of files) {
       const cleanName = fileName.replace(/(\..*)/, '');
       
-      const { default: Command } = await import(`../../commands/${cleanName}`);
+      const { default: Command } = await import(`../../commands/*/${cleanName}`);
       if (!Command) continue;
       
       const command: Command = new Command();

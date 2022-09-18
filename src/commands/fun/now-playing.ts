@@ -1,6 +1,6 @@
-import { Command, CommandContext, Permission } from '../interfaces/command';
-import Music, { ConnectionStatus } from '../modules/music/music';
-import Deps from '../utils/deps';
+import { Command, CommandContext, Permission } from '../../interfaces/command';
+import Music, { ConnectionStatus } from '../../modules/music/music';
+import Deps from '../../utils/deps';
 import { VoiceConnectionDisconnectedState } from '@discordjs/voice';
 import { AutocompleteInteraction, CacheType, CommandInteraction, EmbedBuilder, Message, SlashCommandBuilder, messageLink } from 'discord.js';
 

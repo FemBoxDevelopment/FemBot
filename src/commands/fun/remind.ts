@@ -1,12 +1,12 @@
-import { Command, CommandContext, Permission } from '../interfaces/command';
+import { Command, CommandContext, Permission } from '../../interfaces/command';
 import { EmbedBuilder } from 'discord.js'
-import Guilds from '../data/guilds';
-import Users from '../data/users';
-import { bot } from '../bot';
-import Deps from '../utils/deps';
+import Guilds from '../../data/guilds';
+import Users from '../../data/users';
+import { bot } from '../../bot';
+import Deps from '../../utils/deps';
 import ms from 'ms'
-import { generateUUID } from '../utils/command-utils';
-import { UserDocument } from '../data/models/user';
+import { generateUUID } from '../../utils/command-utils';
+import { UserDocument } from '../../data/models/user';
 
 export default class RemindCommand implements Command {
     name = 'remind';
@@ -90,15 +90,6 @@ export default class RemindCommand implements Command {
 
         user.send({ embeds: [embed] });
     }
-
-
-    //private UsageEmbed(message: CommandContext, prefix: string) {
-    //    const embed = new EmbedBuilder()
-    //    .setAuthor({ name: `Usage`, iconURL: message.bot.user.avatarURL() })
-    //    .setDescription(`Please format your reminders like this : \n\n >>> \`${prefix}remind me [message] in [time]\` \n \`${prefix}remind me that i am cute in 2 hours\``)
-    //    .setColor('#fbe6ed');
-    //    return message.channel.send({ embeds: [embed] });
-    //}
 }
 
 export interface Reminder {

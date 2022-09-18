@@ -2,7 +2,7 @@ import { Collection, Guild, GuildManager, GuildMember } from "discord.js";
 import Members from "../../data/members";
 import Users from "../../data/users";
 import Deps from "../../utils/deps";
-import RemindCommand from "../../commands/remind";
+import RemindCommand from "../../commands/fun/remind";
 
 
 export default class TimeoutHandler {

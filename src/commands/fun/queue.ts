@@ -1,8 +1,8 @@
-import { Command, CommandContext, Permission } from "../interfaces/command";
-import Deps from "../utils/deps";
-import Music, { ConnectionStatus } from "../modules/music/music";
+import { Command, CommandContext, Permission } from "../../interfaces/command";
+import Deps from "../../utils/deps";
+import Music, { ConnectionStatus } from "../../modules/music/music";
 import { EmbedBuilder } from "discord.js";
-import Guilds from "../data/guilds";
+import Guilds from "../../data/guilds";
 import { Song } from "distube";
 
 export default class QueueCommand implements Command {

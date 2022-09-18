@@ -18,13 +18,15 @@ export default class InteractionCreateHandler implements Event {
 
   async invoke(interaction: BaseInteraction) {
     try {
-      //const savedGuild = await this.guilds.get(interaction.guildId);
-      //if(interaction.isButton())
-      //    return this.button.handle(interaction);
+      const savedGuild = await this.guilds.get(interaction.guildId);
+      if (interaction.isButton()) 
+        return this.button.handle(interaction);
 
-      //if(interaction.isCommand())
-      //  await this.commands.handle(interaction, savedGuild);
+      if (interaction.isCommand())
+        await this.commands.handle(interaction, savedGuild);
 
+      if(interaction.isAutocomplete())
+        await this.commands.handle(interaction, savedGuild)
     } catch (e) {}
   }
 }

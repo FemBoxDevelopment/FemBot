@@ -1,4 +1,4 @@
-import { Command, CommandContext, Permission } from "../interfaces/command";
+import { Command, CommandContext, Permission } from "../../interfaces/command";
 import Discord, {
   AutocompleteInteraction,
   CommandInteraction,
@@ -8,10 +8,10 @@ import Discord, {
   User,
 } from "discord.js";
 import { SlashCommandBuilder } from "@discordjs/builders";
-import Members from "../data/members";
-import Deps from "../utils/deps";
-import Guilds from "../data/guilds";
-import { getMemberFromMention } from "../utils/command-utils";
+import Members from "../../data/members";
+import Deps from "../../utils/deps";
+import Guilds from "../../data/guilds";
+import { getMemberFromMention } from "../../utils/command-utils";
 
 export default class BalanceCommand implements Command {
   name = "balance";
