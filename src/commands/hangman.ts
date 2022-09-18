@@ -3,7 +3,7 @@ import HangmanGame from "../modules/games/hangman";
 
 
 export default class HangmanCommand implements Command {
-  cooldown = 2;
+  cooldown = 30;
   module = 'Fun';
   name = 'hangman';
   summary = 'guess the word by suggesting letters with a limit on guesses and time';

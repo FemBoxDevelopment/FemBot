@@ -1,4 +1,4 @@
-import Discord, { Message, GuildMember, Guild, User, Client, PermissionsString, MessageMentions, CommandInteraction, ButtonInteraction, SlashCommandBuilder, ApplicationCommand, TextBasedChannel, MessagePayload, ReplyMessageOptions, AutocompleteInteraction } from 'discord.js';
+import Discord, { Message, GuildMember, Guild, User, Client, PermissionsString, MessageMentions, CommandInteraction, ButtonInteraction, SlashCommandBuilder, TextBasedChannel, AutocompleteInteraction, SlashCommandSubcommandBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js';
 import { GuildDocument } from '../data/models/guild';
 
 export type Permission = '' | PermissionsString;
@@ -13,7 +13,7 @@ export interface Command {
   usage?: string;
   isSlashCommand?: boolean;
 
-  slashCommandData?: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
+  slashCommandData?: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup"> | SlashCommandSubcommandBuilder | SlashCommandSubcommandsOnlyBuilder;
   
   slashCommandExecute?: (interaction: CommandInteraction | AutocompleteInteraction) => Promise<void>;
   buttonExecute?: (interaction: ButtonInteraction, buttonId: string) => Promise<void>;

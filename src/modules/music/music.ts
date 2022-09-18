@@ -1,10 +1,9 @@
 import fs from 'fs';
 import { promisify } from 'util';
 import { Guild, GuildTextBasedChannel, VoiceBasedChannel } from "discord.js";
-import { DisTube, Song, DisTubeVoice, SearchResultType, SearchResult } from "distube";
+import { DisTube, SearchResultType, Queue, GuildIdResolvable } from "distube";
 import { bot } from "../../bot";
 import MusicEvent from "../../interfaces/music-event";
-import Log from "../../utils/log";
 
 const readdir = promisify(fs.readdir);
 export default class Music {
@@ -52,14 +51,21 @@ export default class Music {
         return this.client.getQueue(guild);
     }
 
-    getDuration(voiceChannel?: VoiceBasedChannel) {
-        const queue = this.getQueue(voiceChannel.guild);
-
-        return `${queue.currentTime} / ${queue.songs[0].duration}`;
+    getDuration(player: Queue) {
+        return `${player.formattedCurrentTime} / ${player.songs[0].formattedDuration}`;
     };
+
+    getConnectionStatus(guild: GuildIdResolvable) {
+        return !(this.client.voices.get(guild)?.isDisconnected ?? true) ? ConnectionStatus.Connected : ConnectionStatus.Disconnected;
+    }
 
     async autoCompleteSongs(query: string) {
         const videos = await this.client.search(query, { limit: 10, type: SearchResultType.VIDEO })
         return videos
     }
+}
+
+export enum ConnectionStatus {
+    Connected = "CONNECTED",
+    Disconnected = "DISCONNECTED"
 }

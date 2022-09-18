@@ -2,8 +2,6 @@ import { CacheType, CommandInteraction, GuildTextBasedChannel, SlashCommandBuild
 import { Command, CommandContext, Permission } from '../interfaces/command';
 import Deps from '../utils/deps';
 import Music from '../modules/music/music';
-import User from '../data/users'
-import { EmbedBuilder } from 'discord.js';
 import { getMemberFromMention } from '../utils/command-utils';
 
 export default class PlayCommand implements Command {
@@ -42,7 +40,7 @@ export default class PlayCommand implements Command {
       const option = interaction.options.get('input', true);
       const member = getMemberFromMention(interaction.user.id, interaction.guild)
 
-      await interaction.deferReply();
+      await interaction.deferReply({ ephemeral: true });
 
       if(!member.voice.channel)
         throw new TypeError('You must be in a `VoiceChannel` to play music. /&*footer/ not in VoiceChannel.')
@@ -50,9 +48,9 @@ export default class PlayCommand implements Command {
       await this.music.client.play(member.voice.channel, option.value.toString(), {
         textChannel: interaction.channel as GuildTextBasedChannel,
         member
-      })
+      });
 
-
+      interaction.editReply({ content: '👌' })
     }
 
   };

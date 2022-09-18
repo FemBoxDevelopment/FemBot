@@ -11,8 +11,8 @@ import {
 export default class PingCommand implements Command {
   name = "ping";
   summary = "Probably the best command ever created.";
+  usage = 'ping';
   precondition: Permission = "";
-  cooldown = 3;
   module = "info";
   isSlashCommand = true;
 

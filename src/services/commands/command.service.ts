@@ -1,3 +1,4 @@
+import { SavedCommand } from './../../data/models/command';
 import fs from 'fs';
 import { Message, EmbedBuilder, CommandInteraction, AutocompleteInteraction } from 'discord.js';
 import { Command, CommandContext } from '../../interfaces/command';
@@ -58,38 +59,19 @@ export default class CommandService {
 
   public async handle(interaction: Message | CommandInteraction | AutocompleteInteraction, savedGuild: GuildDocument) {
     try {
-      if(interaction instanceof CommandInteraction) {
-        if(!interaction.isCommand()) return;
+      console.log(this.commands.size)
 
-        const command = this.commands.get(interaction.commandName);
+      if(!(interaction instanceof Message)) {
+
+        const command = this.findCommand(interaction.commandName, savedGuild);
         if (!command) return;
 
         await command.slashCommandExecute(interaction);
-        
-        return this.emit.InteractionExecuted(interaction);
-      }
-
-      if(interaction instanceof AutocompleteInteraction) {
-        if(!interaction.isAutocomplete()) return;
-
-        const command = this.commands.get(interaction.commandName);
-        if(!command) return;
-
-        return await command.slashCommandExecute(interaction);
+        return this.emit.InteractionExecuted(interaction); 
       }
 
       const prefix = savedGuild.general.prefix
-      let slicedContent = interaction.content.slice(prefix.length);
-
-      if(interaction.mentions.users.first()) {
-        if(interaction.mentions.users.first().id == interaction.client.user.id) {
-          if(
-            interaction.content.startsWith(`<@!${interaction.mentions.users.first().id}>`) || 
-            interaction.content.startsWith(`<@!${interaction.mentions.users.first().id}> `)) {
-              slicedContent = interaction.content.slice(`<@!${interaction.mentions.users.first().id}>`.length);
-          }      
-        }
-      }
+      const slicedContent = interaction.content.slice(prefix.length);
 
       const command = this.findCommand(slicedContent, savedGuild);
       const customCommand = this.findCustomCommand(slicedContent, savedGuild);
@@ -117,7 +99,7 @@ export default class CommandService {
       .setAuthor({ name: 'An Error Occurred', iconURL: 'https://images-ext-2.discordapp.net/external/62J2SiHTggRlGa6fXltfhqS5Aa6Bpqhdn_QvvIVQsI4/%3Fv%3D1/https/cdn.discordapp.com/emojis/695631398718930997.png'})
       .setFooter({ text: footer })      
       if(interaction instanceof AutocompleteInteraction)
-        return
+        return console.log(error)
       else await interaction.reply({ embeds: [embed] })
     }
   }

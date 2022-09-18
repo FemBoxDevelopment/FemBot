@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from '@discordjs/builders'
 export default class AvatarCommand implements Command {
   name = 'avatar';
   summary = 'Get a users avatar.';
+  usage = 'avatar [user]'
   module = 'info';
   isSlashCommand = true;
 

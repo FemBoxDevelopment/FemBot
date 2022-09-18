@@ -1,4 +1,4 @@
-import { EmbedBuilder, ColorResolvable, EmbedData, TextChannel } from 'discord.js';
+import { EmbedBuilder, EmbedData, Webhook, Guild } from 'discord.js';
 import { bot } from '../../../bot';
 
 export class WebhookLogger {
@@ -8,11 +8,11 @@ export class WebhookLogger {
     if (!channel) return;
 
     const webhooks = await channel.fetchWebhooks();
-    return webhooks.find(w => w.name === name)
+    return webhooks.find((w: Webhook) => w.name === name)
       ?? await channel.createWebhook({
         name: name,
         avatar: bot.user.displayAvatarURL(),
-        reason: `Created for ${channel.guild.members.me.user.tag}'s webhook logger.`
+        reason: `Created for ${(channel.guild as Guild).members.me.user.tag}'s webhook logger.`
       });
   }
 

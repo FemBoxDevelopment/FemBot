@@ -1,5 +1,5 @@
 import { emitter } from '../bot';
-import { Guild, User, GuildMember, Message, ButtonInteraction, CommandInteraction } from 'discord.js';
+import { Guild, User, GuildMember, Message, ButtonInteraction, CommandInteraction, AutocompleteInteraction } from 'discord.js';
 import { PunishmentArgs } from '../modules/auto-mod/auto-mod';
 import { MemberDocument } from '../data/models/member';
 import { Change } from '../data/models/log';
@@ -49,7 +49,7 @@ export default class Emit {
     emitter.emit('buttonInteraction', int);
   }
 
-  InteractionExecuted(int: CommandInteraction) {
+  InteractionExecuted(int: CommandInteraction | AutocompleteInteraction) {
     emitter.emit('interactionExecuted', int);
   }
 }

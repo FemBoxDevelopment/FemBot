@@ -16,6 +16,7 @@ import { getMemberFromMention } from "../utils/command-utils";
 export default class BalanceCommand implements Command {
   name = "balance";
   summary = "View your balance!";
+  usage = 'balance [user]'
   precondition: Permission = "";
   aliases = ["bal"];
   module = "economy";

@@ -48,7 +48,9 @@ export default class EventsService {
         bot.on(handler.on, async (interaction) => {
           try {
             const savedGuild = await this.guilds.get(interaction.guildId);
-            if (interaction.isButton()) return this.button.handle(interaction);
+            if (interaction.isButton()) 
+              return this.button.handle(interaction);
+
             if (interaction.isCommand())
               await this.commands.handle(interaction, savedGuild);
 

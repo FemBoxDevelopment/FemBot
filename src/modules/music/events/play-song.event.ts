@@ -42,7 +42,7 @@ export default class PlaySongEvent implements MusicEvent {
                 },
                 {
                     name: 'Duration',
-                    value: `\`${this.music.getDuration(queue.voiceChannel)}\``,
+                    value: `\`${song.formattedDuration}\``,
                     inline: true
                 },
                 {
@@ -61,8 +61,8 @@ export default class PlaySongEvent implements MusicEvent {
                     inline: true
                 }
             ]
-        )
+        );
         
-        return (queue.textChannel as any)?.send({ embeds: [ embed ] })
-    }
-}
+        return (queue.textChannel as any)?.send({ embeds: [ embed ] });
+    };
+};
