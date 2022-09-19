@@ -1,7 +1,7 @@
 import { Guild, GuildMember } from "discord.js";
 import Users from "../../data/users";
 import Deps from "../../utils/deps";
-import RemindCommand from "../../commands/remind";
+import RemindCommand from "../../commands/general/remind";
 import CustomEvent from "../../interfaces/custom-event";
 
 

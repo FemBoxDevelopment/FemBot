@@ -64,12 +64,12 @@ export default class AutoMod {
       throw new Error('/&*footer/ No user provided');
 
     if (target.id === instigator.id)
-      throw new TypeError('You cannot punish yourself.');
+      throw new TypeError('/&*footer/ You cannot punish yourself.');
 
     const instigatorMember = target.guild.members.cache
       .get(instigator.id);    
     if (instigatorMember.roles.highest.position <= target.roles.highest.position)
-      throw new TypeError('User does not have permission to ban this member. /&*footer/Invalid permission.');
+      throw new TypeError('User does not have permission to ban this member. /&*footer/ Invalid permission.');
   }
 
   public getMember(target: GuildMember | User | string, guild: Guild): GuildMember {
@@ -133,7 +133,7 @@ export default class AutoMod {
     interaction.reply({ embeds: [embed], components: [ticketEmbedButtons] })
   }
 
-  public ban(interaction: CommandInteraction | CommandContext, target: GuildMember, reason: string, moderator: string) {
+  public async ban(interaction: CommandInteraction | CommandContext, target: GuildMember, reason: string) {
     this.validateAction(target, interaction.user)
 
     if (!reason) throw new Error('/&*footer/ No reason was provided.')
@@ -149,33 +149,51 @@ export default class AutoMod {
       },
       {
         name: 'Moderator:',
-        value: moderator,
+        value: interaction.user.tag,
         inline: true
       }
     ])
-    .setTimestamp()
+    .setTimestamp();
 
     //! THIS NEEDS TO BE FIXED ASAP
+    // try {
+    //   (target as any).send({embeds: [bannedEmbed]}).catch((r) => {
+    //     if(interaction instanceof CommandInteraction) 
+    //       interaction.reply(`${r}`)
+    //     else 
+    //       interaction.message.reply(`${r}`)
+    //   })
+    //   target.ban({ reason })
+    // } catch(err) {
+    //   if(interaction instanceof CommandInteraction) 
+    //     interaction.reply(`Unable to ban user: \`${(err as Error).message.substring(0, 1000)}\`. Please report this to the developers.`)
+    //   else 
+    //     interaction.message.reply(`Unable to ban user: \`${(err as Error).message.substring(0, 1000)}\`. Please report this to the developers.`)
+    // }
+
+    
+
     try {
-      (target as any).send({embeds: [bannedEmbed]}).catch((r) => {
-        if(interaction instanceof CommandInteraction) 
-          interaction.reply(`${r}`)
-        else 
-          interaction.message.reply(`${r}`)
-      })
-      target.ban({ reason })
-    } catch(err) {
-      if(interaction instanceof CommandInteraction) 
-        interaction.reply(`Unable to ban user: \`${(err as Error).message.substring(0, 1000)}\`. Please report this to the developers.`)
-      else 
-        interaction.message.reply(`Unable to ban user: \`${(err as Error).message.substring(0, 1000)}\`. Please report this to the developers.`)
+      await (target.user as any).send({ embeds: [bannedEmbed] })
+      await target.ban({ reason, deleteMessageDays: 7 })
+    } catch (err) {
+      throw new TypeError(`Unable to ban user: \`${(err as Error).message.substring(0, 1000)}\`. /&*footer/ Please report this to the developers.`)
     }
 
     const embed = new EmbedBuilder()
     .setColor('Red')
     .setDescription(`<@${interaction.user.id}> has banned <@${target.id}>!`)
     .addFields([
-        { name: 'Reason', value: reason }
+      { 
+        name: 'Reason', 
+        value: reason,
+        inline: true,
+      },
+      {
+        name: 'User ID',
+        value: target.id,
+        inline: true,
+      }
     ])
     .setTimestamp()
 

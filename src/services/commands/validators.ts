@@ -12,16 +12,16 @@ export default class Validators {
     if (!config) return;
 
     if (!config.enabled)
-      throw new TypeError('Command not enabled!');
+      throw new TypeError('/&*footer/ Command not enabled!');
       
     const cooldown = this.cooldowns.get(msg.author, command);
     if (cooldown)
-      throw new TypeError(`Command is in cooldown for another \`${cooldown}s\`.`);
+      throw new TypeError(`Command is in cooldown for another \`${cooldown}s\`. /&*footer/ Command on cooldown.`);
   }
 
   checkPreconditions(command: Command, executor: GuildMember) {
     if (command.precondition && !executor.permissions.has([command.precondition]))
-      throw new TypeError(`Missing Permissions \`${command.precondition}\``);
+      throw new TypeError(`You are missing permissions \`${command.precondition}\` /&*footer/ Invalid Permissions`);
   }
 
   checkChannel(channel: any, savedGuild: GuildDocument, customCommand?: CustomCommand) {

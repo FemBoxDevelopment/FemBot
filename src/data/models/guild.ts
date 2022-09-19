@@ -131,7 +131,7 @@ export interface ReactionRole {
 }
 
 export class ShopModule extends Module {
-  currency: Currency;
+  currency = new Currency();
   categories: ShopCategory[] = [];
 };
 
