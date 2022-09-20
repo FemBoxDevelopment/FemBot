@@ -11,7 +11,7 @@ FemBot - The Femboy Discord Bot for any community!
 
 ## General Setup
 
--   Download and install [Node.js](https://nodejs.org) version `18.9.0` or higher.
+-   Download and install [Node.js](https://nodejs.org) version `16.9.0` or higher.
 -   Fill in the `.env.example` file and rename it to `.env`
 -   Install the required dependencies.
 
